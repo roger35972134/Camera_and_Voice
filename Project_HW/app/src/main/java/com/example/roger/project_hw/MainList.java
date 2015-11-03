@@ -9,10 +9,12 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -20,23 +22,37 @@ public class MainList extends Activity {
     String[] Balls = new String[]{"basketball", "baseball", "football"};
     String[] engName = {"籃球", "棒球", "足球"};
     ListView listView;
+    String filepath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
+    File file=new File(filepath);
+    //ArrayAdapter<String> adapter;
+    MyAdapter adapter;
+    ArrayList<String> Myfiles=new ArrayList<>();
+    File[] files=file.listFiles();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
 
+        listView=(ListView)findViewById(R.id.list);
+        for(File mCurrentFile:files){
+            if(mCurrentFile.isFile())//mCurrentFile.getName().contains(".jpg"))
+                Myfiles.add(mCurrentFile.getName());
+        }
+        /*adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,Myfiles);*/
+
+
+
+        adapter=new MyAdapter(this,Myfiles);
+        listView.setAdapter(adapter);
+
         ImageView camera=(ImageView)findViewById(R.id.captureimage);
         camera.setOnClickListener(new ImageView.OnClickListener() {
             public void onClick(View v) {
-                dispatchTakePictureIntent();
+                File f=dispatchTakePictureIntent();
+                Myfiles.add(f.getName());
+                adapter.notifyDataSetChanged();
             }
         });
-
-        listView=(ListView)findViewById(R.id.list);
-        CharSequence[] title=Balls;
-        CharSequence[] info=engName;
-        MyAdapter adapter=new MyAdapter(this,title,info);
-        listView.setAdapter(adapter);
     }
 
     String mCurrentPhotoPath;
@@ -57,9 +73,9 @@ public class MainList extends Activity {
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
-    static final int REQUEST_TAKE_PHOTO = 0;
+    static final int REQUEST_TAKE_PHOTO = 1;
 
-    private void dispatchTakePictureIntent() {
+    private File dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -70,15 +86,18 @@ public class MainList extends Activity {
 
             } catch (IOException ex) {
                 // Error occurred while creating the File
-
+                Toast toast=Toast.makeText(this,"Error!",Toast.LENGTH_LONG);
+                toast.show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile)); //return "file://.....
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                return photoFile;
             }
         }
+        return null;
     }
 
 }

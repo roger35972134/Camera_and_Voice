@@ -8,23 +8,23 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class MyAdapter extends BaseAdapter {
     //ListView
         int[] resId = new int[]{R.drawable.basketball, R.drawable.baseball, R.drawable.football};
-        CharSequence[] Balls=null;
-        CharSequence[] engName=null;
+        ArrayList<String> filename=null;
         private LayoutInflater myInflater;
 
-        public MyAdapter(Context ctxt, CharSequence[] title, CharSequence[] info){
+        public MyAdapter(Context ctxt,ArrayList<String> title){
             myInflater = LayoutInflater.from(ctxt);
-            this.Balls = title;
-            this.engName = info;
+            this.filename = title;
         }
         @Override
-        public int getCount(){return Balls.length;}
+        public int getCount(){return filename.size();}
         @Override
-        public Object getItem(int position){return Balls[position];}
+        public Object getItem(int position){return filename;}
         @Override
         public long getItemId(int position){return position;}
         @Override
@@ -35,28 +35,24 @@ public class MyAdapter extends BaseAdapter {
 
                 viewTag = new ViewTag(
                         (ImageView) convertView.findViewById(R.id.img),
-                        (TextView) convertView.findViewById(R.id.txtName),
-                        (TextView) convertView.findViewById(R.id.txtBelow)
+                        (TextView) convertView.findViewById(R.id.txtName)
                 );
                 convertView.setTag(viewTag);
             } else {
                 viewTag = (ViewTag) convertView.getTag();
             }
-            viewTag.icon.setImageResource(resId[position]);
-            viewTag.title.setText(Balls[position]);
-            viewTag.info.setText(engName[position]);
+            viewTag.icon.setImageResource(resId[position%3]);
+            viewTag.title.setText(filename.get(position));
             return convertView;
         }
         class ViewTag{
             ImageView icon;
             TextView title;
-            TextView info;
 
-            public ViewTag(ImageView icon,TextView title,TextView info)
+            public ViewTag(ImageView icon,TextView title)
             {
                 this.icon=icon;
                 this.title=title;
-                this.info=info;
             }
         }
     }

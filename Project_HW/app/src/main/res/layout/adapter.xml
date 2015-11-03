@@ -14,20 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/img"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
         android:text="first"
         android:textColor="#fff"
-        android:textSize="24dp"
-        />
-    <TextView android:id="@+id/txtBelow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtName"
-        android:layout_toRightOf="@+id/img"
-        android:layout_marginLeft="5dp"
-        android:textColor="#fff"
-        android:textSize="16dp"
-        android:text="second"
-        android:layout_marginTop="0dp"/>
+        android:textSize="18dp"
+        android:layout_alignBottom="@+id/img"
+        android:layout_alignTop="@+id/img" />
 
 </RelativeLayout>
