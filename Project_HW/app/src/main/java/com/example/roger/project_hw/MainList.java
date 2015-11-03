@@ -27,22 +27,25 @@ public class MainList extends Activity {
     //ArrayAdapter<String> adapter;
     MyAdapter adapter;
     ArrayList<String> Myfiles=new ArrayList<>();
+    ArrayList<String> Files=new ArrayList<>();
     File[] files=file.listFiles();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
-
         listView=(ListView)findViewById(R.id.list);
         for(File mCurrentFile:files){
             if(mCurrentFile.isFile())//mCurrentFile.getName().contains(".jpg"))
+            {
                 Myfiles.add(mCurrentFile.getName());
+                Files.add(mCurrentFile.getAbsolutePath());
+            }
         }
         /*adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,Myfiles);*/
 
 
 
-        adapter=new MyAdapter(this,Myfiles);
+        adapter=new MyAdapter(this,Myfiles,Files);
         listView.setAdapter(adapter);
 
         ImageView camera=(ImageView)findViewById(R.id.captureimage);
@@ -50,6 +53,7 @@ public class MainList extends Activity {
             public void onClick(View v) {
                 File f=dispatchTakePictureIntent();
                 Myfiles.add(f.getName());
+                Files.add(f.getAbsolutePath());
                 adapter.notifyDataSetChanged();
             }
         });
