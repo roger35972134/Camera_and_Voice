@@ -92,15 +92,15 @@ public class MyPhoto extends Activity{
                             //timer.cancel();
                             btn = new Button(MyPhoto.this);
                             btn.setId(count);
-                            btn.setText("test" + (count));
+                            btn.setText("R"+count);
                             btn.setX(x);
                             btn.setY(y + 200);
                             btn.setOnClickListener(new Button.OnClickListener() {
                                 public void onClick(View v) {
-                                Toast toast=Toast.makeText(MyPhoto.this,"Btn"+btn.getId(),Toast.LENGTH_LONG);
-                                toast.show();
+                                //Toast toast=Toast.makeText(MyPhoto.this,v.getId(),Toast.LENGTH_LONG);
+                                //toast.show();
                                     File sd = Environment.getExternalStorageDirectory();
-                                    String audiopath = sd.getAbsolutePath() + "/Pictures/record" + btn.getId() + ".amr";
+                                    String audiopath = sd.getAbsolutePath() + "/Pictures/record" + v.getId() + ".amr";
                                     mediaPlayer = new MediaPlayer();
                                     try {
                                         mediaPlayer.reset();
