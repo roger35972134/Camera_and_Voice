@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -19,12 +20,9 @@ import java.util.Date;
 
 
 public class MainList extends Activity {
-    String[] Balls = new String[]{"basketball", "baseball", "football"};
-    String[] engName = {"籃球", "棒球", "足球"};
     ListView listView;
     String filepath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
     File file=new File(filepath);
-    //ArrayAdapter<String> adapter;
     MyAdapter adapter;
     ArrayList<String> Myfiles=new ArrayList<>();
     ArrayList<String> Files=new ArrayList<>();
@@ -35,15 +33,12 @@ public class MainList extends Activity {
         setContentView(R.layout.activity_main_list);
         listView=(ListView)findViewById(R.id.list);
         for(File mCurrentFile:files){
-            if(mCurrentFile.isFile())//mCurrentFile.getName().contains(".jpg"))
+            if(mCurrentFile.isFile()&& mCurrentFile.getName().contains("jpg"))
             {
                 Myfiles.add(mCurrentFile.getName());
                 Files.add(mCurrentFile.getAbsolutePath());
             }
         }
-        /*adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,Myfiles);*/
-
-
 
         adapter=new MyAdapter(this,Myfiles,Files);
         listView.setAdapter(adapter);
@@ -55,6 +50,18 @@ public class MainList extends Activity {
                 Myfiles.add(f.getName());
                 Files.add(f.getAbsolutePath());
                 adapter.notifyDataSetChanged();
+            }
+        });
+        listView.setOnItemClickListener(new ListView.OnItemClickListener(){
+            public void onItemClick(AdapterView<?> parent,View v,int position,long id)
+            {
+                //String sel=parent.getItemAtPosition(position).toString();
+                Intent intent=new Intent();
+                intent.setClass(MainList.this,MyPhoto.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("PATH",Files.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }

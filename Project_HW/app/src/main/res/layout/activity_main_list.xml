@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#fff"
     >
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:src="@drawable/camera"
-        android:background="#0066ff"
+        android:background="#ff6600"
         android:padding="5dp"
         android:id="@+id/captureimage"
          />
