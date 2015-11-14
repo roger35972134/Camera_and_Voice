@@ -20,15 +20,16 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class MyPhoto extends Activity{
     String path;
     ImageView img;
     int i=0,count=0,endrecord=0;
     float Scale=1;
-    boolean longclick=false,recording=false;
+    boolean longclick=false,recording=false,end=false;
     Button btn;
-    Timer timer;
+    Timer timer=null;
     MediaRecorder mediaRecorder;
     RelativeLayout relativeLayout;
     MediaPlayer mediaPlayer;
@@ -73,47 +74,65 @@ public class MyPhoto extends Activity{
                 int x=0,y=0;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        recorder(count);
-                        break;
-                        /*timer=new Timer();
-                        timer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                longclick=true;
-                                recorder(count++);
-                            }
-                        },3000);*/
-
-                    case MotionEvent.ACTION_UP:/*if(longclick){*/
-                            endrecording();
-                            x=(int)event.getX();
-                            y=(int)event.getY();
-                            //longclick=false;
-                            //timer.cancel();
-                            btn = new Button(MyPhoto.this);
-                            btn.setId(count);
-                            btn.setText("R"+count);
-                            btn.setX(x);
-                            btn.setY(y + 200);
-                            btn.setOnClickListener(new Button.OnClickListener() {
-                                public void onClick(View v) {
-                                //Toast toast=Toast.makeText(MyPhoto.this,v.getId(),Toast.LENGTH_LONG);
-                                //toast.show();
-                                    File sd = Environment.getExternalStorageDirectory();
-                                    String audiopath = sd.getAbsolutePath() + "/Pictures/record" + v.getId() + ".amr";
-                                    mediaPlayer = new MediaPlayer();
-                                    try {
-                                        mediaPlayer.reset();
-                                        mediaPlayer.setDataSource(audiopath);
-                                        mediaPlayer.prepare();
-                                        mediaPlayer.start();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                        if(!recording)
+                        {
+                            timer=new Timer();
+                            timer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    longclick=true;
                                 }
-                            });
-                            count++;
-                            relativeLayout.addView(btn);
+                            },3000);
+                        }
+                        else
+                        {
+                            endrecord++;
+                            if(endrecord==2)
+                            {
+                                endrecord=0;
+                                end=true;
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                            if(longclick){
+                                recorder(count);
+                                longclick=false;
+                                x = (int) event.getX();
+                                y = (int) event.getY();
+                                timer.cancel();
+                            }
+                            if(end)
+                            {
+                                endrecording();
+                                end = false;
+
+
+                                btn = new Button(MyPhoto.this);
+                                btn.setId(count);
+                                btn.setText("R" + count);
+                                btn.setX(x);
+                                btn.setY(y + 200);
+                                btn.setOnClickListener(new Button.OnClickListener() {
+                                    public void onClick(View v) {
+                                        //Toast toast=Toast.makeText(MyPhoto.this,v.getId(),Toast.LENGTH_LONG);
+                                        //toast.show();
+                                        File sd = Environment.getExternalStorageDirectory();
+                                        String audiopath = sd.getAbsolutePath() + "/Pictures/record" + v.getId() + ".amr";
+                                        mediaPlayer = new MediaPlayer();
+                                        try {
+                                            mediaPlayer.reset();
+                                            mediaPlayer.setDataSource(audiopath);
+                                            mediaPlayer.prepare();
+                                            mediaPlayer.start();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                count++;
+                                relativeLayout.addView(btn);
+                            }
                             break;
 
                 }
