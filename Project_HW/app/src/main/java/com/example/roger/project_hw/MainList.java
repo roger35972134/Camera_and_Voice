@@ -21,7 +21,7 @@ import java.util.Date;
 
 public class MainList extends Activity {
     ListView listView;
-    String filepath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
+    String filepath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Photo";
     File file=new File(filepath);
     MyAdapter adapter;
     ArrayList<String> Myfiles=new ArrayList<>();
@@ -73,7 +73,7 @@ public class MainList extends Activity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
+                Environment.DIRECTORY_PICTURES + "/HW/Photo");
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */

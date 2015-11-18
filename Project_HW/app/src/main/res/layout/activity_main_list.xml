@@ -11,12 +11,14 @@
         android:background="#ff6600"
         android:padding="5dp"
         android:id="@+id/captureimage"
-         />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/list"
         android:choiceMode="singleChoice"
-        android:layout_below="@+id/captureimage"
+        android:layout_above="@+id/captureimage"
         />
 </RelativeLayout>

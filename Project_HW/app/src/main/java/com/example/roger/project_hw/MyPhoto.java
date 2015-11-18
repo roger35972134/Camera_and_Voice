@@ -69,9 +69,9 @@ public class MyPhoto extends Activity{
         path=bundle.getString("PATH");
         img.setImageBitmap(BitmapFromFile(path));
         img.setOnTouchListener(new ImageView.OnTouchListener() {
-            @Override
+            int x=0,y=0;
             public boolean onTouch(View v, MotionEvent event) {
-                int x=0,y=0;
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if(!recording)
@@ -82,7 +82,7 @@ public class MyPhoto extends Activity{
                                 public void run() {
                                     longclick=true;
                                 }
-                            },3000);
+                            },1000);
                         }
                         else
                         {
@@ -99,6 +99,7 @@ public class MyPhoto extends Activity{
                                 recorder(count);
                                 longclick=false;
                                 x = (int) event.getX();
+                                System.out.println(x);
                                 y = (int) event.getY();
                                 timer.cancel();
                             }
@@ -106,19 +107,17 @@ public class MyPhoto extends Activity{
                             {
                                 endrecording();
                                 end = false;
-
-
                                 btn = new Button(MyPhoto.this);
                                 btn.setId(count);
                                 btn.setText("R" + count);
                                 btn.setX(x);
-                                btn.setY(y + 200);
+                                btn.setY(y+200);
                                 btn.setOnClickListener(new Button.OnClickListener() {
                                     public void onClick(View v) {
                                         //Toast toast=Toast.makeText(MyPhoto.this,v.getId(),Toast.LENGTH_LONG);
                                         //toast.show();
                                         File sd = Environment.getExternalStorageDirectory();
-                                        String audiopath = sd.getAbsolutePath() + "/Pictures/record" + v.getId() + ".amr";
+                                        String audiopath = sd.getAbsolutePath() + "/Pictures/HW/Voice/record" + v.getId() + ".amr";
                                         mediaPlayer = new MediaPlayer();
                                         try {
                                             mediaPlayer.reset();
@@ -149,7 +148,7 @@ public class MyPhoto extends Activity{
             String filename="record"+filecount+".amr";
             mediaRecorder=new MediaRecorder();
             File SDcard= Environment.getExternalStorageDirectory();
-            File record=new File(SDcard.getAbsolutePath()+"/Pictures/"+filename);
+            File record=new File(SDcard.getAbsolutePath()+"/Pictures/HW/Voice/"+filename);
             //Source
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             //Format
