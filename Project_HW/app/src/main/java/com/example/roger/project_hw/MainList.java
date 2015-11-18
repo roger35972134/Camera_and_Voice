@@ -22,16 +22,20 @@ import java.util.Date;
 public class MainList extends Activity {
     ListView listView;
     String filepath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Photo";
-    File file=new File(filepath);
+
     MyAdapter adapter;
     ArrayList<String> Myfiles=new ArrayList<>();
     ArrayList<String> Files=new ArrayList<>();
-    File[] files=file.listFiles();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
         listView=(ListView)findViewById(R.id.list);
+        File file=new File(filepath);
+        if(!file.exists())
+            file.mkdirs();
+        File[] files=file.listFiles();
         for(File mCurrentFile:files){
             if(mCurrentFile.isFile()&& mCurrentFile.getName().contains("jpg"))
             {

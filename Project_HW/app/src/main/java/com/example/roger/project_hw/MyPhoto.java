@@ -24,6 +24,7 @@ import java.util.TimerTask;
 
 public class MyPhoto extends Activity{
     String path;
+    String filepath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Voice";
     ImageView img;
     int i=0,count=0,endrecord=0;
     float Scale=1;
@@ -42,6 +43,9 @@ public class MyPhoto extends Activity{
         ImageView minus=(ImageView)findViewById(R.id.minus);
         relativeLayout=(RelativeLayout)findViewById(R.id.relative);
         img=(ImageView)findViewById(R.id.photo);
+        File file=new File(filepath);
+        if(!file.exists())
+            file.mkdirs();
 
         plus.setOnClickListener(new ImageView.OnClickListener(){
             public void onClick(View v){
@@ -114,10 +118,8 @@ public class MyPhoto extends Activity{
                                 btn.setY(y+200);
                                 btn.setOnClickListener(new Button.OnClickListener() {
                                     public void onClick(View v) {
-                                        //Toast toast=Toast.makeText(MyPhoto.this,v.getId(),Toast.LENGTH_LONG);
-                                        //toast.show();
-                                        File sd = Environment.getExternalStorageDirectory();
-                                        String audiopath = sd.getAbsolutePath() + "/Pictures/HW/Voice/record" + v.getId() + ".amr";
+
+                                        String audiopath = filepath+"/record" + v.getId() + ".amr";
                                         mediaPlayer = new MediaPlayer();
                                         try {
                                             mediaPlayer.reset();
