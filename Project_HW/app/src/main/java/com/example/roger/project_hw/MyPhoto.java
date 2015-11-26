@@ -23,9 +23,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MyPhoto extends Activity{
-    String path;
-    String filepath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Voice";
+    String path,name;
+    String filepath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Voice/";
     ImageView img;
+    int[] Xaxis,Yaxis;
     int i=0,count=0,endrecord=0;
     float Scale=1;
     boolean longclick=false,recording=false,end=false;
@@ -43,9 +44,9 @@ public class MyPhoto extends Activity{
         ImageView minus=(ImageView)findViewById(R.id.minus);
         relativeLayout=(RelativeLayout)findViewById(R.id.relative);
         img=(ImageView)findViewById(R.id.photo);
-        File file=new File(filepath);
+        /*File file=new File(filepath);
         if(!file.exists())
-            file.mkdirs();
+            file.mkdirs();*/
 
         plus.setOnClickListener(new ImageView.OnClickListener(){
             public void onClick(View v){
@@ -71,6 +72,11 @@ public class MyPhoto extends Activity{
         Intent intent=this.getIntent();
         Bundle bundle=intent.getExtras();
         path=bundle.getString("PATH");
+        name=bundle.getString("NAME");
+        File floder=new File(filepath+name);
+        if(!floder.exists())
+            floder.mkdirs();
+
         img.setImageBitmap(BitmapFromFile(path));
         img.setOnTouchListener(new ImageView.OnTouchListener() {
             int x=0,y=0;
@@ -100,11 +106,10 @@ public class MyPhoto extends Activity{
                         break;
                     case MotionEvent.ACTION_UP:
                             if(longclick){
-                                recorder(count);
                                 longclick=false;
                                 x = (int) event.getX();
-                                System.out.println(x);
                                 y = (int) event.getY();
+                                recorder(x,y);
                                 timer.cancel();
                             }
                             if(end)
@@ -119,7 +124,7 @@ public class MyPhoto extends Activity{
                                 btn.setOnClickListener(new Button.OnClickListener() {
                                     public void onClick(View v) {
 
-                                        String audiopath = filepath+"/record" + v.getId() + ".amr";
+                                        String audiopath = filepath+name+"/"+v.getX()+"_"+v.getY()+".amr";
                                         mediaPlayer = new MediaPlayer();
                                         try {
                                             mediaPlayer.reset();
@@ -141,16 +146,15 @@ public class MyPhoto extends Activity{
             }
         });
     }
-    public void recorder(int filecount)
+    public void recorder(int x,int y)
     {
         recording=true;
         Toast toast=Toast.makeText(MyPhoto.this,"recording",Toast.LENGTH_LONG);
         toast.show();
         try{
-            String filename="record"+filecount+".amr";
+            String filename=x+"_"+y+".amr";
             mediaRecorder=new MediaRecorder();
-            File SDcard= Environment.getExternalStorageDirectory();
-            File record=new File(SDcard.getAbsolutePath()+"/Pictures/HW/Voice/"+filename);
+            File record=new File(filepath+name+"/"+filename);
             //Source
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             //Format

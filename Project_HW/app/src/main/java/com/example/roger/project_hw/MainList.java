@@ -64,6 +64,7 @@ public class MainList extends Activity {
                 intent.setClass(MainList.this,MyPhoto.class);
                 Bundle bundle=new Bundle();
                 bundle.putString("PATH",Files.get(position));
+                bundle.putString("NAME",Myfiles.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -74,10 +75,11 @@ public class MainList extends Activity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES + "/HW/Photo");
+                Environment.DIRECTORY_PICTURES + "/HW/Photo/");
+        /*if(!storageDir.exists())
+            storageDir.mkdirs();*/
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
