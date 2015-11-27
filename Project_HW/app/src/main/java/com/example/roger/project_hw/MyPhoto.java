@@ -24,7 +24,7 @@ import java.util.TimerTask;
 
 public class MyPhoto extends Activity{
     String path,name;
-    String filepath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Voice/";
+    String filepath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Voice";
     ImageView img;
     int[] Xaxis,Yaxis;
     int i=0,count=0,endrecord=0;
@@ -35,6 +35,7 @@ public class MyPhoto extends Activity{
     MediaRecorder mediaRecorder;
     RelativeLayout relativeLayout;
     MediaPlayer mediaPlayer;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo);
@@ -73,10 +74,10 @@ public class MyPhoto extends Activity{
         Bundle bundle=intent.getExtras();
         path=bundle.getString("PATH");
         name=bundle.getString("NAME");
-        File floder=new File(filepath+name);
+        File floder=new File(filepath+"/"+name);
         if(!floder.exists())
             floder.mkdirs();
-
+        buttonBuildUp();
         img.setImageBitmap(BitmapFromFile(path));
         img.setOnTouchListener(new ImageView.OnTouchListener() {
             int x=0,y=0;
@@ -120,11 +121,11 @@ public class MyPhoto extends Activity{
                                 btn.setId(count);
                                 btn.setText("R" + count);
                                 btn.setX(x);
-                                btn.setY(y+200);
+                                btn.setY(y + 200);
                                 btn.setOnClickListener(new Button.OnClickListener() {
                                     public void onClick(View v) {
 
-                                        String audiopath = filepath+name+"/"+v.getX()+"_"+v.getY()+".amr";
+                                        String audiopath = filepath+"/"+name+"/"+(int)v.getX()+"_"+(int)v.getY()+"_.amr";
                                         mediaPlayer = new MediaPlayer();
                                         try {
                                             mediaPlayer.reset();
@@ -146,15 +147,60 @@ public class MyPhoto extends Activity{
             }
         });
     }
+    public void buttonBuildUp()
+    {
+        File voice=new File(filepath+"/"+name);
+        System.out.println(voice.getAbsolutePath());
+        File[] voices=voice.listFiles();
+        for(File mCurrentFile:voices){
+            if(mCurrentFile.getName().contains("amr"))
+            {
+                String[] Axis;
+                String Axis1,Axis2;
+                Axis=mCurrentFile.getName().split("_");
+                /*int X=Integer.parseInt(Axis[0]);
+                int Y=Integer.parseInt(Axis[1]);*/
+                int X=0,Y=0;
+                /*Axis[0]=mCurrentFile.getName().substring(0, 3);
+                Axis[1]=mCurrentFile.getName().substring(4, 7);*/
+                Toast t=Toast.makeText(MyPhoto.this,Axis[0]+","+Axis[1],Toast.LENGTH_LONG);
+                t.show();
+                X=Integer.parseInt(Axis[0]);
+                Y=Integer.parseInt(Axis[1]);
+                btn = new Button(MyPhoto.this);
+                btn.setId(count);
+                btn.setText("R" + count);
+                btn.setX(X);
+                btn.setY(Y);
+                btn.setOnClickListener(new Button.OnClickListener() {
+                    public void onClick(View v) {
+
+                        String audiopath = filepath + "/" + name + "/" + (int) v.getX() + "_" + (int) v.getY() + "_.amr";
+                        mediaPlayer = new MediaPlayer();
+                        try {
+                            mediaPlayer.reset();
+                            mediaPlayer.setDataSource(audiopath);
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                relativeLayout.addView(btn);
+                count++;
+            }
+        }
+    }
     public void recorder(int x,int y)
     {
         recording=true;
         Toast toast=Toast.makeText(MyPhoto.this,"recording",Toast.LENGTH_LONG);
         toast.show();
         try{
-            String filename=x+"_"+y+".amr";
+            String filename=x+"_"+(y+200)+"_.amr";
             mediaRecorder=new MediaRecorder();
-            File record=new File(filepath+name+"/"+filename);
+            File record=new File(filepath+"/"+name+"/"+filename);
             //Source
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             //Format
