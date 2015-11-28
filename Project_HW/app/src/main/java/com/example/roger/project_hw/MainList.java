@@ -44,7 +44,7 @@ public class MainList extends Activity {
             }
         }
 
-        adapter=new MyAdapter(this,Myfiles,Files);
+        adapter=new MyAdapter(this,Myfiles,Files,this);
         listView.setAdapter(adapter);
 
         ImageView camera=(ImageView)findViewById(R.id.captureimage);

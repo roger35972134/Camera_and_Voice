@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
@@ -26,7 +28,6 @@ public class MyPhoto extends Activity{
     String path,name;
     String filepath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Voice";
     ImageView img;
-    int[] Xaxis,Yaxis;
     int i=0,count=0,endrecord=0;
     float Scale=1;
     boolean longclick=false,recording=false,end=false;
@@ -45,9 +46,6 @@ public class MyPhoto extends Activity{
         ImageView minus=(ImageView)findViewById(R.id.minus);
         relativeLayout=(RelativeLayout)findViewById(R.id.relative);
         img=(ImageView)findViewById(R.id.photo);
-        /*File file=new File(filepath);
-        if(!file.exists())
-            file.mkdirs();*/
 
         plus.setOnClickListener(new ImageView.OnClickListener(){
             public void onClick(View v){
@@ -74,11 +72,13 @@ public class MyPhoto extends Activity{
         Bundle bundle=intent.getExtras();
         path=bundle.getString("PATH");
         name=bundle.getString("NAME");
+
         File floder=new File(filepath+"/"+name);
         if(!floder.exists())
             floder.mkdirs();
         buttonBuildUp();
-        img.setImageBitmap(BitmapFromFile(path));
+        Glide.with(this).load(path).into(img);
+        //img.setImageBitmap(BitmapFromFile(path));
         img.setOnTouchListener(new ImageView.OnTouchListener() {
             int x=0,y=0;
             public boolean onTouch(View v, MotionEvent event) {
@@ -156,15 +156,8 @@ public class MyPhoto extends Activity{
             if(mCurrentFile.getName().contains("amr"))
             {
                 String[] Axis;
-                String Axis1,Axis2;
                 Axis=mCurrentFile.getName().split("_");
-                /*int X=Integer.parseInt(Axis[0]);
-                int Y=Integer.parseInt(Axis[1]);*/
-                int X=0,Y=0;
-                /*Axis[0]=mCurrentFile.getName().substring(0, 3);
-                Axis[1]=mCurrentFile.getName().substring(4, 7);*/
-                Toast t=Toast.makeText(MyPhoto.this,Axis[0]+","+Axis[1],Toast.LENGTH_LONG);
-                t.show();
+                int X,Y;
                 X=Integer.parseInt(Axis[0]);
                 Y=Integer.parseInt(Axis[1]);
                 btn = new Button(MyPhoto.this);
@@ -216,7 +209,7 @@ public class MyPhoto extends Activity{
         }
     }
     public void endrecording() {
-            Toast toast=Toast.makeText(MyPhoto.this,"end recording",Toast.LENGTH_LONG);
+            Toast toast=Toast.makeText(MyPhoto.this,"end recording",Toast.LENGTH_SHORT);
             toast.show();
             mediaRecorder.stop();
             mediaRecorder.release();
