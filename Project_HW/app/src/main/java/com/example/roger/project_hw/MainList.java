@@ -6,10 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -18,20 +17,42 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 
 public class MainList extends Activity {
-    ListView listView;
     String filepath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Photo";
-
     MyAdapter adapter;
+    MyRecycler myRecycler;
     ArrayList<String> Myfiles=new ArrayList<>();
     ArrayList<String> Files=new ArrayList<>();
+
+    //@Bind(R.id.list) ListView listView;
+    @Bind(R.id.id_recyclerview_horizontal) RecyclerView recyclerView;
+
+    @OnClick(R.id.captureimage) void take_photo(){
+        File f=dispatchTakePictureIntent();
+        Myfiles.add(f.getName());
+        Files.add(f.getAbsolutePath());
+        myRecycler.notifyDataSetChanged();
+    }
+    /*@OnItemClick(R.id.list) void itemClick(AdapterView<?> parent, View v, int position, long id){
+        Intent intent = new Intent();
+        intent.setClass(MainList.this, MyPhoto.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("PATH", Files.get(position));
+        bundle.putString("NAME", Myfiles.get(position));
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
-        listView=(ListView)findViewById(R.id.list);
+        ButterKnife.bind(this);
         File file=new File(filepath);
         if(!file.exists())
             file.mkdirs();
@@ -43,32 +64,25 @@ public class MainList extends Activity {
                 Files.add(mCurrentFile.getAbsolutePath());
             }
         }
-
-        adapter=new MyAdapter(this,Myfiles,Files,this);
-        listView.setAdapter(adapter);
-
-        ImageView camera=(ImageView)findViewById(R.id.captureimage);
-        camera.setOnClickListener(new ImageView.OnClickListener() {
-            public void onClick(View v) {
-                File f=dispatchTakePictureIntent();
-                Myfiles.add(f.getName());
-                Files.add(f.getAbsolutePath());
-                adapter.notifyDataSetChanged();
-            }
-        });
-        listView.setOnItemClickListener(new ListView.OnItemClickListener(){
-            public void onItemClick(AdapterView<?> parent,View v,int position,long id)
-            {
-                //String sel=parent.getItemAtPosition(position).toString();
-                Intent intent=new Intent();
-                intent.setClass(MainList.this,MyPhoto.class);
-                Bundle bundle=new Bundle();
-                bundle.putString("PATH",Files.get(position));
-                bundle.putString("NAME",Myfiles.get(position));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        myRecycler=new MyRecycler(this,Files,Myfiles,this);
+        myRecycler.setOnItemClickLitener(new MyRecycler.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent();
+                intent.setClass(MainList.this, MyPhoto.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("PATH", Files.get(position));
+                bundle.putString("NAME", Myfiles.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
+        recyclerView.setAdapter(myRecycler);
+        //adapter=new MyAdapter(this,Myfiles,Files,this);
+        //listView.setAdapter(adapter);
     }
 
     String mCurrentPhotoPath;

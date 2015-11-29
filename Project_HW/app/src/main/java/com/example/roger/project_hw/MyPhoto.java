@@ -24,49 +24,53 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MyPhoto extends Activity{
     String path,name;
     String filepath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/HW/Voice";
-    ImageView img;
     int i=0,count=0,endrecord=0;
     float Scale=1;
     boolean longclick=false,recording=false,end=false;
     Button btn;
     Timer timer=null;
     MediaRecorder mediaRecorder;
-    RelativeLayout relativeLayout;
     MediaPlayer mediaPlayer;
 
+    @Bind(R.id.rotate) ImageView rotate;
+    @Bind(R.id.relative) RelativeLayout relativeLayout;
+    @Bind(R.id.photo) ImageView img;
+
+    @OnClick(R.id.plus) void Plus(){
+        Scale*=1.1;
+        img.setImageBitmap(resize(Scale));
+    }
+    @OnClick(R.id.minus) void Minus(){
+        Scale*=0.9;
+        img.setImageBitmap(resize(Scale));
+    }
+    @OnClick(R.id.rotate) void Rotate(){
+        i+=90;
+        img.setImageBitmap(rotating());
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo);
+        ButterKnife.bind(this);
 
-        ImageView rotate=(ImageView)findViewById(R.id.rotate);
+
+        /*ImageView rotate=(ImageView)findViewById(R.id.rotate);
         ImageView plus=(ImageView)findViewById(R.id.plus);
         ImageView minus=(ImageView)findViewById(R.id.minus);
         relativeLayout=(RelativeLayout)findViewById(R.id.relative);
-        img=(ImageView)findViewById(R.id.photo);
+        img=(ImageView)findViewById(R.id.photo);*/
 
-        plus.setOnClickListener(new ImageView.OnClickListener(){
-            public void onClick(View v){
-                Scale*=1.1;
-                img.setImageBitmap(resize(Scale));
-            }
-        });
-        minus.setOnClickListener(new ImageView.OnClickListener() {
-            public void onClick(View v) {
-                Scale*=0.9;
-                img.setImageBitmap(resize(Scale));
-            }
-        });
+        /*plus.setOnClickListener(new ImageView.OnClickListener(){
 
-        rotate.setOnClickListener(new ImageView.OnClickListener(){
-            public void onClick(View v)
-            {
-                i+=90;
-                img.setImageBitmap(rotating());
-            }
-        });
+        });*/
 
         Intent intent=this.getIntent();
         Bundle bundle=intent.getExtras();
