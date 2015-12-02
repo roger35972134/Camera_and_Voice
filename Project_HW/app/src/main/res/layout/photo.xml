@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00bbff"
-    android:id="@+id/relative">
+    android:background="#00bbff">
+
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_margin="5dp"
         android:id="@+id/rotate"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentRight="true"
-        android:src="@drawable/rotation"/>
+        android:layout_margin="5dp"
+        android:src="@drawable/rotation" />
+
     <ImageView
+        android:id="@+id/minus"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_margin="5dp"
-        android:id="@+id/minus"
         android:layout_toLeftOf="@id/rotate"
-        android:src="@drawable/minus"/>
+        android:src="@drawable/minus" />
+
     <ImageView
+        android:id="@+id/plus"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_margin="5dp"
         android:layout_toLeftOf="@+id/minus"
-        android:id="@+id/plus"
-        android:src="@drawable/plus"/>
+        android:src="@drawable/plus" />
+
     <ImageView
         android:id="@+id/photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"
         android:layout_below="@+id/rotate"
         android:layout_centerHorizontal="true"
-        android:background="#ff6600"/>
+        android:layout_marginTop="20dp"
+        android:background="#ff6600"
+        android:padding="10dp" />
 </RelativeLayout>

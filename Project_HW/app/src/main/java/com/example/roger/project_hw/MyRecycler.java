@@ -15,22 +15,11 @@ import java.util.List;
 
 public class MyRecycler extends RecyclerView.Adapter<MyRecycler.ViewHolder>{
 
-    public interface OnItemClickLitener
-    {
-        void onItemClick(View view, int position);
-    }
+    Activity activity;
     private OnItemClickLitener mOnItemClickLitener;
-
-    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener)
-    {
-        this.mOnItemClickLitener = mOnItemClickLitener;
-    }
-
     private LayoutInflater mInflater;
     private List<String> mFilepath;
     private List<String> mFilename;
-    Activity activity;
-
     public MyRecycler(Context context, List<String> filepath,List<String> filename,Activity activity)
     {
         mInflater = LayoutInflater.from(context);
@@ -39,15 +28,9 @@ public class MyRecycler extends RecyclerView.Adapter<MyRecycler.ViewHolder>{
         this.activity=activity;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
+    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener)
     {
-        public ViewHolder(View arg0)
-        {
-            super(arg0);
-        }
-
-        ImageView mImg;
-        TextView mTxt;
+        this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
     @Override
@@ -82,5 +65,20 @@ public class MyRecycler extends RecyclerView.Adapter<MyRecycler.ViewHolder>{
     @Override
     public int getItemCount() {
         return mFilename.size();
+    }
+
+    public interface OnItemClickLitener
+    {
+        void onItemClick(View view, int position);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder
+    {
+        ImageView mImg;
+        TextView mTxt;
+        public ViewHolder(View arg0)
+        {
+            super(arg0);
+        }
     }
 }
